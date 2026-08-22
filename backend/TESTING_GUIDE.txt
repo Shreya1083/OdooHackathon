@@ -1,0 +1,33 @@
+TESTING THE IMPROVED BACKEND
+
+STEP 1: Start Server
+npm run dev
+
+Expect to see:
+MongoDB Connected
+Server running on port 5000
+
+STEP 2: Test Root
+GET http://localhost:5000/
+Should show API endpoints
+
+STEP 3: Test Validation
+POST http://localhost:5000/api/auth/signup
+Body: {}
+Expect: 400 error (validation failed)
+
+STEP 4: Create Admin
+POST http://localhost:5000/api/auth/signup
+Body: {name,email,password,role:admin}
+Expect: 201 success with token
+
+STEP 5: Test Check-in
+POST http://localhost:5000/api/attendance/checkin
+Header: Authorization Bearer TOKEN
+Expect: 201 success
+
+STEP 6: Test Duplicate Check-in
+POST http://localhost:5000/api/attendance/checkin again
+Expect: 400 error (already checked in)
+
+All validations working!
