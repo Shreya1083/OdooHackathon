@@ -38,7 +38,7 @@ exports.signup = async (req, res) => {
       department,
       phone,
       address,
-      employeeId: employeeId || undefined // Will be auto-generated if not provided
+      employeeId: employeeId || undefined
     });
 
     res.status(201).json({
@@ -52,7 +52,7 @@ exports.signup = async (req, res) => {
         department: user.department,
         token: generateToken(user._id)
       },
-      message: 'User registered successfully. Please verify your email.'
+      message: 'User registered successfully'
     });
   } catch (error) {
     console.error('Signup error:', error);
