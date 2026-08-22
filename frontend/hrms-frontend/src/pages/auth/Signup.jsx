@@ -155,7 +155,7 @@ export default function Signup() {
     try {
       const { user } = await apiSignup(form);
       login(user);
-      toast.success('Account created! Welcome to HRMS Pro.');
+      toast.success('Registration successful! Welcome to HRMS Pro.');
       navigate('/employee/dashboard', { replace: true });
     } catch (err) {
       setServerError(err.message || 'Registration failed');
@@ -211,7 +211,7 @@ export default function Signup() {
           </div>
 
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-surface-900">Create account</h2>
+            <h2 className="text-2xl font-bold text-surface-900">Registration</h2>
             <p className="text-surface-500 text-sm mt-1">Fill in your details to get started</p>
           </div>
 
@@ -295,8 +295,8 @@ export default function Signup() {
 
             <button type="submit" className="btn-primary w-full btn-lg mt-2" disabled={loading}>
               {loading
-                ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Creating account…</>
-                : <><UserPlus size={18} /> Create account</>
+                ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Registering…</>
+                : <><UserPlus size={18} /> Register</>
               }
             </button>
           </form>

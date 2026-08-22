@@ -6,8 +6,8 @@ import { apiLogin } from '../../services/api.js';
 import toast from 'react-hot-toast';
 
 const DEMO_ACCOUNTS = [
-  { label: 'Employee', email: 'alice@hrms.com', password: 'pass123',  color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
-  { label: 'HR Officer', email: 'hr@hrms.com', password: 'hr123', color: 'bg-blue-50 border-blue-200 text-blue-700' },
+  { label: 'Employee', email: 'alice@hrms.com', password: 'alice123',  color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
+  { label: 'HR Officer', email: 'hr@hrms.com', password: 'hr1234', color: 'bg-blue-50 border-blue-200 text-blue-700' },
   { label: 'Admin',    email: 'admin@hrms.com', password: 'admin123', color: 'bg-purple-50 border-purple-200 text-purple-700' },
 ];
 
@@ -204,7 +204,7 @@ export default function Login() {
           <p className="text-center text-sm text-surface-500 mt-6">
             Don&apos;t have an account?{' '}
             <Link to="/signup" className="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
-              Create account
+              Register
             </Link>
           </p>
         </div>
