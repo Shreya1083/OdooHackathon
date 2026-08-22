@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'employee'],
+    enum: ['admin', 'hr', 'employee'],
     default: 'employee'
   },
   employeeId: {
@@ -52,6 +52,16 @@ const userSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailVerificationToken: {
+    type: String
+  },
+  emailVerificationExpires: {
+    type: Date
   }
 }, {
   timestamps: true
@@ -68,10 +78,10 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// Generate employee ID automatically
+// Generate employee ID automatically (for employees and HR only)
 userSchema.pre('save', async function(next) {
-  if (!this.employeeId && this.role === 'employee') {
-    const count = await this.constructor.countDocuments({ role: 'employee' });
+  if (!this.employeeId && (this.role === 'employee' || this.role === 'hr')) {
+    const count = await this.constructor.countDocuments({ role: { $in: ['employee', 'hr'] } });
     this.employeeId = `EMP${String(count + 1).padStart(4, '0')}`;
   }
   next();

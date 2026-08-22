@@ -11,10 +11,13 @@ const { validatePayroll } = require('../middleware/validate');
 
 const router = express.Router();
 
+// Employee routes
 router.get('/my', protect, getMySalary);
-router.get('/user/:userId', protect, authorize('admin'), getSalaryByUser);
-router.get('/all', protect, authorize('admin'), getAllPayrolls);
-router.post('/create', protect, authorize('admin'), validatePayroll, createOrUpdatePayroll);
-router.put('/:id', protect, authorize('admin'), updatePayrollStatus);
+
+// Admin/HR routes
+router.get('/all', protect, authorize('admin', 'hr'), getAllPayrolls);
+router.get('/user/:userId', protect, authorize('admin', 'hr'), getSalaryByUser);
+router.post('/create', protect, authorize('admin', 'hr'), validatePayroll, createOrUpdatePayroll);
+router.put('/:id', protect, authorize('admin', 'hr'), updatePayrollStatus);
 
 module.exports = router;

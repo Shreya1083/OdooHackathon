@@ -6,9 +6,24 @@ const validateEmail = (email) => {
   return re.test(email);
 };
 
-// Validate password strength
+// Validate password strength (more lenient for easier signup)
 const validatePassword = (password) => {
-  return password && password.length >= 6;
+  if (!password || password.length < 6) return false;
+  
+  // At least one letter and one number
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  
+  return hasLetter && hasNumber;
+};
+
+// Get password validation message
+const getPasswordError = (password) => {
+  if (!password) return 'Password is required';
+  if (password.length < 6) return 'Password must be at least 6 characters long';
+  if (!/[a-zA-Z]/.test(password)) return 'Password must contain at least one letter';
+  if (!/\d/.test(password)) return 'Password must contain at least one number';
+  return null;
 };
 
 // Auth validation
@@ -30,9 +45,10 @@ exports.validateSignup = (req, res, next) => {
   }
 
   if (!validatePassword(password)) {
+    const error = getPasswordError(password);
     return res.status(400).json({
       success: false,
-      message: 'Password must be at least 6 characters long'
+      message: error || 'Password does not meet security requirements'
     });
   }
 

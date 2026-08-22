@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 
 const DEMO_ACCOUNTS = [
   { label: 'Employee', email: 'alice@hrms.com', password: 'pass123',  color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
+  { label: 'HR Officer', email: 'hr@hrms.com', password: 'hr123', color: 'bg-blue-50 border-blue-200 text-blue-700' },
   { label: 'Admin',    email: 'admin@hrms.com', password: 'admin123', color: 'bg-purple-50 border-purple-200 text-purple-700' },
 ];
 
@@ -23,7 +24,7 @@ export default function Login() {
 
   function getRedirect(role) {
     if (from && !from.startsWith('/login') && !from.startsWith('/signup')) return from;
-    if (role === 'admin') return '/admin/dashboard';
+    if (role === 'admin' || role === 'hr') return '/admin/dashboard';
     return '/employee/dashboard';
   }
 
@@ -37,7 +38,7 @@ export default function Login() {
     try {
       const { user } = await apiLogin({ email: form.email.trim(), password: form.password });
       login(user);
-      toast.success(`Welcome back, ${user.firstName}!`);
+      toast.success(`Welcome back, ${user.name}!`);
       navigate(getRedirect(user.role), { replace: true });
     } catch (err) {
       setError(err.message || 'Login failed');

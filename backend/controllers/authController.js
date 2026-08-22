@@ -6,7 +6,7 @@ const generateToken = require('../utils/generateToken');
 // @access  Public
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password, role, department, phone, address } = req.body;
+    const { name, email, password, role, department, phone, address, employeeId } = req.body;
 
     // Check if user exists
     const userExists = await User.findOne({ email });
@@ -18,6 +18,17 @@ exports.signup = async (req, res) => {
       });
     }
 
+    // Check if employee ID is provided and already exists
+    if (employeeId) {
+      const employeeIdExists = await User.findOne({ employeeId });
+      if (employeeIdExists) {
+        return res.status(400).json({
+          success: false,
+          message: 'Employee ID already exists'
+        });
+      }
+    }
+
     // Create user
     const user = await User.create({
       name,
@@ -26,28 +37,28 @@ exports.signup = async (req, res) => {
       role: role || 'employee',
       department,
       phone,
-      address
+      address,
+      employeeId: employeeId || undefined // Will be auto-generated if not provided
     });
 
-    if (user) {
-      res.status(201).json({
-        success: true,
-        data: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          employeeId: user.employeeId,
-          department: user.department,
-          token: generateToken(user._id)
-        },
-        message: 'User registered successfully'
-      });
-    }
+    res.status(201).json({
+      success: true,
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        employeeId: user.employeeId,
+        department: user.department,
+        token: generateToken(user._id)
+      },
+      message: 'User registered successfully. Please verify your email.'
+    });
   } catch (error) {
+    console.error('Signup error:', error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message || 'Registration failed'
     });
   }
 };

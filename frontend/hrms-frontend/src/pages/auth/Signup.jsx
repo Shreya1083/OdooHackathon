@@ -9,11 +9,13 @@ import { apiSignup } from '../../services/api.js';
 import toast from 'react-hot-toast';
 
 const FIELD_RULES = {
+  employeeId:      { required: false, label: 'Employee ID', minLength: 3 },
   firstName:       { required: true,  label: 'First name' },
   lastName:        { required: true,  label: 'Last name' },
   username:        { required: true,  label: 'Username',  minLength: 3 },
   email:           { required: true,  label: 'Email',     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
   phone:           { required: false, label: 'Phone' },
+  role:            { required: true,  label: 'Role' },
   password:        { required: true,  label: 'Password',  minLength: 6 },
   confirmPassword: { required: true,  label: 'Confirm password' },
 };
@@ -33,17 +35,29 @@ function PasswordStrength({ password }) {
   if (!password) return null;
   const checks = [
     { label: '6+ characters', ok: password.length >= 6 },
-    { label: 'Uppercase',     ok: /[A-Z]/.test(password) },
-    { label: 'Number',        ok: /\d/.test(password) },
+    { label: 'Has letter',     ok: /[a-zA-Z]/.test(password) },
+    { label: 'Has number',     ok: /\d/.test(password) },
   ];
+  const score = checks.filter(c => c.ok).length;
+  const strength = score === 0 ? 'Weak' : score <= 1 ? 'Fair' : score === 2 ? 'Good' : 'Strong';
+  const color = score === 0 ? 'text-red-600' : score === 1 ? 'text-yellow-600' : score === 2 ? 'text-blue-600' : 'text-emerald-600';
+  
   return (
-    <div className="flex gap-3 mt-2">
-      {checks.map((c) => (
-        <div key={c.label} className="flex items-center gap-1 text-xs">
-          <div className={`w-1.5 h-1.5 rounded-full ${c.ok ? 'bg-emerald-500' : 'bg-surface-300'}`} />
-          <span className={c.ok ? 'text-emerald-600' : 'text-surface-400'}>{c.label}</span>
+    <div className="mt-2">
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className={`text-xs font-medium ${color}`}>Strength: {strength}</span>
+        <div className="flex-1 h-1 bg-surface-200 rounded-full overflow-hidden">
+          <div className={`h-full transition-all duration-300 ${score === 0 ? 'bg-red-500 w-0' : score === 1 ? 'bg-yellow-500 w-1/3' : score === 2 ? 'bg-blue-500 w-2/3' : 'bg-emerald-500 w-full'}`} />
         </div>
-      ))}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {checks.map((c) => (
+          <div key={c.label} className="flex items-center gap-1 text-xs">
+            <div className={`w-1.5 h-1.5 rounded-full ${c.ok ? 'bg-emerald-500' : 'bg-surface-300'}`} />
+            <span className={c.ok ? 'text-emerald-600' : 'text-surface-400'}>{c.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -87,8 +101,8 @@ export default function Signup() {
   const fileRef    = useRef(null);
 
   const [form, setForm] = useState({
-    firstName: '', lastName: '', username: '', email: '',
-    phone: '', password: '', confirmPassword: '', avatar: null,
+    employeeId: '', firstName: '', lastName: '', username: '', email: '',
+    phone: '', role: 'employee', password: '', confirmPassword: '', avatar: null,
   });
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [errors,        setErrors]        = useState({});

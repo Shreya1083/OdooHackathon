@@ -40,7 +40,7 @@ function RootRedirect() {
   const { user, loading } = useAuth();
   if (loading) return <LoadingSpinner fullPage />;
   if (!user)   return <Navigate to="/login" replace />;
-  if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
+  if (user.role === 'admin' || user.role === 'hr') return <Navigate to="/admin/dashboard" replace />;
   return <Navigate to="/employee/dashboard" replace />;
 }
 
@@ -99,11 +99,11 @@ export default function App() {
             <Route path="profile"         element={<EmployeeProfile />} />
           </Route>
 
-          {/* ── Admin routes ────────────────────────────────────────────────── */}
+          {/* ── Admin/HR routes ────────────────────────────────────────────────── */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute allowedRoles={['admin']} redirectTo="/employee/dashboard">
+              <ProtectedRoute allowedRoles={['admin', 'hr']} redirectTo="/employee/dashboard">
                 <MainLayout />
               </ProtectedRoute>
             }

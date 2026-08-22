@@ -37,8 +37,9 @@ const attendanceSchema = new mongoose.Schema({
 // Calculate hours when checkout is set
 attendanceSchema.pre('save', function(next) {
   if (this.checkOut && this.checkIn) {
-    const diff = this.checkOut - this.checkIn;
-    this.hours = (diff / (1000 * 60 * 60)).toFixed(2);
+    const diff = this.checkOut.getTime() - this.checkIn.getTime();
+    const hours = diff / (1000 * 60 * 60);
+    this.hours = parseFloat(hours.toFixed(2));
   }
   next();
 });

@@ -11,12 +11,17 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const hydrate = async () => {
       try {
-        const raw = localStorage.getItem('hrms_session');
-        if (!raw) return;
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setLoading(false);
+          return;
+        }
         const current = await apiGetCurrentUser();
         setUser(current);
-      } catch {
-        localStorage.removeItem('hrms_session');
+      } catch (error) {
+        console.error('Session hydration failed:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
       } finally {
         setLoading(false);
       }
@@ -42,7 +47,9 @@ export function AuthProvider({ children }) {
     loading,
     role: user?.role ?? null,
     isEmployee: user?.role === 'employee',
-    isAdmin:    user?.role === 'admin',
+    isHR: user?.role === 'hr',
+    isAdmin: user?.role === 'admin',
+    isAdminOrHR: user?.role === 'admin' || user?.role === 'hr',
     login,
     logout,
     updateUser,
